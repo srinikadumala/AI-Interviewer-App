@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1050253606305",
+    "project_id": "aiinterviewerapp-a911e",
+    "storage_bucket": "aiinterviewerapp-a911e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050253606305:android:7b6c56bd772f004403dfe0",
+        "android_client_info": {
+          "package_name": "com.example.ai_interviewer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMOa95LMdVMekNFO6BrHsPIlTg9Ax_OqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

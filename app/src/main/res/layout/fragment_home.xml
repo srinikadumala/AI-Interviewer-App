@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome👋"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ready to ace your interview?"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- START INTERVIEW CARD -->
+        <LinearLayout
+            android:id="@+id/startInterviewCard"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/card_bg"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:layout_marginBottom="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_interview"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Interview"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="15dp"/>
+        </LinearLayout>
+
+        <!-- HISTORY CARD -->
+        <LinearLayout
+            android:id="@+id/historyCard"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/card_bg"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:layout_marginBottom="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_history"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Performance"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="15dp"/>
+        </LinearLayout>
+
+        <!-- PROFILE CARD -->
+        <LinearLayout
+            android:id="@+id/profileCard"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/card_bg"
+            android:gravity="center_vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_profile"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Profile"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="15dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
