@@ -3,6 +3,8 @@ package com.example.ai_interviewer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import android.speech.SpeechRecognizer;
+import android.speech.RecognitionListener;
 
 import android.Manifest;
 import android.content.Intent;
@@ -34,6 +36,8 @@ public class QuestionActivity extends AppCompatActivity {
 
     TextView questionText, feedbackText, timerText;
     EditText answerBox;
+    SpeechRecognizer speechRecognizer;
+    Intent speechIntent;
 
     Button submitBtn, hintBtn, speakBtn, finishBtn;
 
@@ -68,6 +72,46 @@ public class QuestionActivity extends AppCompatActivity {
         hintBtn = findViewById(R.id.hintBtn);
         speakBtn = findViewById(R.id.speakBtn);
         finishBtn = findViewById(R.id.finishBtn);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+        speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
+
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+                Toast.makeText(getApplicationContext(), "Listening...", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+
+                ArrayList<String> data =
+                        results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+                if (data != null && !data.isEmpty()) {
+                    answerBox.setText(data.get(0));
+                }
+            }
+
+            @Override public void onBeginningOfSpeech() {}
+            @Override public void onRmsChanged(float rmsdB) {}
+            @Override public void onBufferReceived(byte[] buffer) {}
+            @Override public void onEndOfSpeech() {}
+
+            @Override
+            public void onError(int error) {
+                Toast.makeText(getApplicationContext(),
+                        "Try speaking clearly...",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override public void onPartialResults(Bundle partialResults) {}
+            @Override public void onEvent(int eventType, Bundle params) {}
+        });
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO)
@@ -215,7 +259,7 @@ public class QuestionActivity extends AppCompatActivity {
 
                 if (response.body() != null) {
 
-                    String evaluation = response.body().getEvaluation();
+                    String evaluation = response.body().getFeedback();
 
                     feedbackText.setText(evaluation);
 
@@ -284,48 +328,43 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
+    // 🔥 ONLY THIS METHOD UPDATED (important)
     private void speakAnswer() {
-
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-
-        intent.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        );
-
-        intent.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault()
-        );
-
-        intent.putExtra(
-                RecognizerIntent.EXTRA_PROMPT,
-                "Speak your answer"
-        );
-
-        startActivityForResult(intent, 100);
+        speechRecognizer.startListening(speechIntent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == 100) {
 
-            ArrayList<String> result =
-                    data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (resultCode == RESULT_OK && data != null) {
 
-            if (result != null && result.size() > 0) {
+                ArrayList<String> results =
+                        data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-                String spokenText = result.get(0);
+                if (results != null && !results.isEmpty()) {
 
-                answerBox.setText(spokenText);
+                    // 🔥 Pick best result
+                    String spokenText = results.get(0);
 
-                Toast.makeText(
-                        this,
-                        "Voice converted to text",
-                        Toast.LENGTH_SHORT
-                ).show();
+                    answerBox.setText(spokenText);
+
+                    Toast.makeText(this,
+                            "Voice captured: " + spokenText,
+                            Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(this,
+                            "Didn't catch that. Try again slowly.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(this,
+                        "Speech cancelled. Try again.",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -386,6 +425,10 @@ public class QuestionActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
 
         if (tts != null) {
             tts.stop();
